@@ -1,0 +1,63 @@
+
+<%= render partial: 'shared/nav-bar' %>
+<h1 class="jumbotron"> <%= @user.username %> Profile </h1>
+<h4>Followers : <%= @user.follower_ids.count %>   
+<%= select_tag 'user_id', options_for_select(@user.followers.map {|u| [u.username,u.id] }) %> </h4>
+
+<h4>Following : <%= @user.followee_ids.count %>    
+	<%= select_tag 'user_id', options_for_select(@user.followees.map {|u| [u.username,u.id] }, :selected => "1" ) %> </h4>
+<br/>
+<br/>
+<% unless current_user == @user %>
+		<% unless current_user.following?(@user) %>
+		<%= form_for(current_user.active_relationships.build) do |f| %>
+		<div>
+			<%= hidden_field_tag :followee_id, @user.id %>
+		</div>
+		<%= f.submit "Follow", class: "btn btn-primary my-button" %>
+		<% end %>
+		<% end %>
+		<%= button_to 'Unfollow', relationship_path(@user), method: :delete, class: "btn btn-danger" if current_user.following?(@user) %>
+		<% end %>
+		<br/>
+		<br/>
+<div class="container">
+	<ul>
+
+	<% @user.tweets.each do |tweet| %>
+	<li>
+		@<%= tweet.user.username %>
+		<%= tweet.body %>
+		
+	</li>
+    <% if current_user.id == tweet.user_id %>
+	<%= link_to tweet_path(tweet) do %>
+    <%= image_tag "https://image.flaticon.com/icons/svg/61/61848.svg", class: "delete" %>
+    <% end %>
+     <% end %>
+	<br/>
+	<% tweet.tags.each do |tag| %>
+		<%= link_to "#{tag.name}", tag_path(tag) %>
+	<% end %>
+	<br/>
+	<br/>
+	<% if tweet.likes.count > 0 %>
+	<p><%= tweet.likes.count %> <%= (tweet.likes.count) == 1 ? 'Like' : 'Likes'%>
+		<%= select_tag 'user_id', options_for_select(tweet.likes.map {|u| [@user_names[u.id.to_i - 1],u.id] }) %>
+	</p>
+	<% end %>
+	<small><%= tweet.created_at.to_s.slice(0..19).to_s.slice(0..19) %></small>
+	<br/>
+	<br/>
+	<% pre_like = tweet.likes.find { |like| like.user_id == current_user.id} %>
+			<% if pre_like %>
+ 				 <%= button_to 'Unlike', tweet_like_path(tweet, pre_like), method: :delete %>
+			<% else %>
+  				<%= button_to 'Like', tweet_likes_path(tweet), method: :post %>
+			<% end %>
+	<hr>
+
+	<% end %>
+</ul>
+	</div>
+<div>

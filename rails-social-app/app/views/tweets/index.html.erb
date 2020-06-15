@@ -1,0 +1,19 @@
+<%= render partial: 'shared/nav-bar' %>
+<h1 class="jumbotron"> Welcome to Twitter </h1>
+<br/>
+<br/>
+<div class="container">
+	<div class="card my-2 p-3">
+		<%= render "new" %>
+	</div>
+	<%= form_tag(root_path, method: :get) do %>
+ 	 <%= text_field_tag :body, params[:body], placeholder: "Search!" %>
+ 	 <%= submit_tag 'Search', name: nil %>
+	<% end %>
+	<br/>
+	<br/>	
+	<div class="card my-2 p-3">
+		<%= render partial: 'shared/tweet-table' %>
+	</div>
+
+<div>

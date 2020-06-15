@@ -1,0 +1,40 @@
+version: '3'
+services:
+  db:
+    image: postgres:9.5.3
+    deploy:
+      mode: global
+    restart: always
+    environment:
+      - POSTGRES_USER=railsuser
+      - POSTGRES_DB=railsapp 
+      - POSTGRES_ROOT_PASSWORD=password
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+  app:
+    image: 74744556/rails-chat-app:v1
+    deploy:
+      mode: global
+    volumes:
+      - ".:/railsapp"
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+      - redis
+    links:
+      - db
+      - redis
+    environment:
+      - DB_USER=railsuser
+      - DB_NAME=railsapp
+      - DB_PASSWORD=password
+      - DB_HOST=db
+  redis:
+    image: redis:3.2.0
+    deploy:
+      mode: global
+    ports: 
+      - "6379:6379"
+    command: redis-server

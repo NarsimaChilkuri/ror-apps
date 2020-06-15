@@ -1,0 +1,7 @@
+<%= form_for(@tweet) do |form| %>
+	 	<%= form.text_area :body, label: false, placeholder: "What's Happening?", style: "margin: 0px;
+    height: 132px;
+    width: 927px;" %>
+      <%= form.file_field :attachment%>
+	 	<%= submit_tag "Tweet!" %>
+<% end %>

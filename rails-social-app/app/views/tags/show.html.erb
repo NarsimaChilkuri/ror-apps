@@ -1,0 +1,11 @@
+<h1 class="jumbotron"> Tweets with <%= @tag.name %> </h1>
+<% if @count > 1 %>
+<h3 class="jumbotron"> <%= @count %> tweets </h3>
+<% elsif @count == 1  %>
+<h3 class="jumbotron"> Single Tweet </h3>
+<% else %>
+<h3 class="jumbotron"> No Tweets found for this tag </h3>
+<% end %>
+<div class="container">
+	<%= render "shared/tweet-table" %>
+</div>

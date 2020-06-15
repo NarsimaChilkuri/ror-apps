@@ -1,0 +1,43 @@
+<%= stylesheet_link_tag    "application", :media => "all" %>
+<%= render partial: 'shared/nav-bar' %>
+<br/>
+<br/>
+<h1 class="jumbotron"> Welcome to Twitter </h1>
+<br/>
+<br/>
+<div class="container">
+	<div class="card my-2 p-3">
+	<%= form_tag(users_path, method: :get) do %>
+ 	<%= text_field_tag :username, params[:username], placeholder: "Search!" %>
+ 	<%= submit_tag 'Search', name: nil %>
+	<% end %>
+	<br/>
+	<br/>
+	<ul class="users-head">
+		<% @users.each do |user| %>
+		<% unless user == current_user %>
+		<li class="users-item">
+			<%= link_to "#{user.username}",user_path(user), class: "users" %>
+		</li>
+		<% end %>
+		<br/>
+		<br/>		
+		<% unless current_user == user %>
+		<% unless current_user.following?(user) %>
+		<%= form_for(current_user.active_relationships.build) do |f| %>
+		<div>
+			<%= hidden_field_tag :followee_id, user.id %>
+		</div>
+		<%= f.submit "Follow", class: "btn btn-primary my-button" %>
+		<% end %>
+		<% end %>
+		<%= link_to 'Unfollow', relationship_path(user), method: :delete, class: "btn btn-danger" if current_user.following?(@user) %>
+		<% end %>
+		<br/>
+		<br/>
+		<hr>
+		<% end %>
+	</ul>
+	
+	</div>
+<div>

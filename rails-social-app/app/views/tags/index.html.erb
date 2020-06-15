@@ -1,0 +1,52 @@
+<%= render partial: 'shared/nav-bar' %>
+<br/>
+<br/>
+<h1 class="jumbotron"> Trending </h1>
+<br/>
+<br/>
+<div class="container">
+	<div class="card my-2 p-3">
+	<%= form_tag(tags_path, method: :get) do %>
+ 	<%= text_field_tag :name, params[:name], placeholder: "Search!" %>
+ 	<%= submit_tag 'Search', name: nil %>
+	<% end %>
+	<br/>
+	<br/>
+	<ul>
+		<% @tags.sort_by { |tage| tage.tweets.count * -1 }.each_with_index do |tag, i| %>
+         <% if i==0 %>
+         <li class="nav-head">
+			<h3><%= i+1 %>.</h3> 
+			<% if tag.tweets.count != 0%>
+			<h1> <%= link_to "#{tag.name}",tag_path(tag), class: "nav-item" %></h1>
+			
+			<h3><%= tag.tweets.count %> tweets </h3>
+             <% end %>
+		</li>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+         <% else %>
+         <li class="nav-head">
+			<p><%= i+1 %>.</p> 
+			<% if tag.tweets.count != 0 %>
+			<h3> <%= link_to "#{tag.name}",tag_path(tag), class: "nav-item" %></h3>
+			
+			<p><%= tag.tweets.count %> tweets </p>
+             <% end %>
+		</li>
+         <% end %>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<hr>
+		<% end %>
+	</ul>
+
+	</div>
+<div>

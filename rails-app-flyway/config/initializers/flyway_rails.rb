@@ -1,0 +1,1 @@
+Flyway::Rails::MIGRATION_DIRECTORY = '../../db/migrations'

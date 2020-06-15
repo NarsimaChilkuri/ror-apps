@@ -1,0 +1,64 @@
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+	$(function() {
+      $('.myLink').bind('ajax:success', function() {
+  			 $(this).closest('#likes').fadeIn();
+		});
+    })
+</script> -->
+<ul>
+	<% @tweets.each do |tweet| %>
+	<li>
+		<%= tweet.body %>
+	</li>
+	<% if current_user.id == tweet.user_id %>
+	<%= link_to tweet_path(tweet), method: :delete do %>
+    <%= image_tag "https://image.flaticon.com/icons/svg/61/61848.svg", class: "delete" %>
+    <% end %>
+    <% end %>
+	<br/>
+	
+	<% tweet.tags.each do |tag| %>
+		<%= link_to "#{tag.name}", tag_path(tag) %>
+	<% end %>
+    <br/>
+ 
+	
+
+	
+
+	
+	
+	
+	 <% if tweet.attachment_url.to_s.split(".").last == "jpg" || tweet.attachment_url.to_s.split(".").last == "jpeg" || tweet.attachment_url.to_s.split(".").last == "gif" || tweet.attachment_url.to_s.split(".").last == "png" %>
+		<img src="<%= tweet.attachment_url %>"> 
+	 <% elsif tweet.attachment_url.to_s.split(".").last == "mp4" || tweet.attachment_url.to_s.split(".").last == "avi" || tweet.attachment_url.to_s.split(".").last == "avi" %>
+	 	
+		<video width="320" height="240" controls autoplay muted>
+ 				 <source src="<%= tweet.attachment_url %>" type="video/mp4">
+		</video>
+	<% end %>
+	<br/>
+	<div id="likes">
+    <% if tweet.likes.count > 0 %>
+	<p><%= tweet.likes.count %> <%= (tweet.likes.count) == 1 ? 'Like' : 'Likes'%>
+        
+		<%= select_tag 'user_id', options_for_select(tweet.likes.map {|u| [@user_names[u.user_id.to_i - 1],u.user_id] }) %>
+	</p>
+	<% end %>
+    </div>
+
+	<small><%= tweet.created_at.to_s.slice(0..19).to_s.slice(0..19) %></small>
+	<br/>
+	<br/>
+	<% pre_like = tweet.likes.find { |like| like.user_id == current_user.id} %>
+			<% if pre_like %>
+ 				 <%= button_to 'Unlike', tweet_like_path(tweet, pre_like), method: :delete  %>
+			<% else %>
+  				<%= button_to 'Like', tweet_likes_path(tweet), method: :post %>
+			<% end %>
+	<hr>
+
+
+ 
+	<% end %>
+</ul>
